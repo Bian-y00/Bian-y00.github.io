@@ -1,0 +1,189 @@
+/*  === 文件：lab2-02-006-index.css  === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "微软雅黑", sans-serif;
+    font-size: 14px;
+}
+
+.header {
+    width: 100%;
+    border-bottom: 1px solid #ccc;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    display: inline-block;
+    margin-right: 30px;
+}
+
+.nav {
+    display: inline-block;
+}
+
+.nav a {
+    text-decoration: none;
+    color: #666;
+    margin: 0 10px;
+}
+
+.nav a:hover {
+    color: #e63946;
+}
+
+.container {
+    width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    gap: 10px;
+}
+
+.left-col {
+    width: 120px;
+}
+
+.left-col h3 {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.category-list {
+    list-style: none;
+}
+
+.category-list li {
+    margin: 8px 0;
+}
+
+.category-list a {
+    text-decoration: none;
+    color: #666;
+}
+
+.category-list a:hover {
+    color: #e63946;
+    text-decoration: underline;
+}
+
+.middle-col {
+    flex: 1;
+}
+
+.hot-recommend h3 {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.book-item {
+    text-align: center;
+    padding: 10px;
+}
+
+.book-item img {
+    width: 100px;
+    height: 140px;
+    margin-bottom: 5px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    object-fit: cover;
+}
+
+.book-item img:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.book-item p {
+    color: #333;
+    margin: 3px 0;
+}
+
+.book-item span {
+    color: #e63946;
+    font-weight: bold;
+}
+
+.new-books {
+    margin-top: 20px;
+}
+
+.new-books h3 {
+    font-size: 16px;
+    color: #e63946;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+.new-books table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.new-books th, .new-books td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.new-books img {
+    width: 60px;
+    height: 80px;
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    object-fit: cover;
+}
+
+.new-books img:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.right-col {
+    width: 180px;
+}
+
+.promo-item {
+    margin-bottom: 15px;
+    overflow: hidden;
+    padding: 5px;
+}
+
+.promo-item img {
+    width: 45%;
+    height: 120px;
+    float: left;
+    margin-right: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    object-fit: cover;
+}
+
+.promo-item img:hover {
+    transform: translateY(-4px) scale(1.08);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.12);
+}
+
+.promo-item p {
+    color: #333;
+    line-height: 1.4;
+    overflow: hidden;
+}
