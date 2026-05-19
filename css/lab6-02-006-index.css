@@ -1,0 +1,709 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Microsoft YaHei", sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #f8f9ff 0%, #e0f2fe 100%);
+    min-height: 100vh;
+    color: #333;
+}
+
+.header {
+    background: #2D3744;
+    color: white;
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 22px;
+    font-size: 15px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.nav a:hover {
+    color: #4FC3F7;
+    background-color: rgba(79, 195, 247, 0.1);
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+
+/* 登录状态显示区域：欢迎信息 + 退出链接 */
+.user-status {
+    color: #ffffff;
+    margin-left: 16px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.user-status a {
+    color: #4FC3F7;
+    text-decoration: none;
+    margin-left: 8px;
+}
+
+.user-status a:hover {
+    text-decoration: underline;
+}
+
+.top-btn {
+    background: #4FC3F7;
+    padding: 6px 14px;
+    border-radius: 4px;
+    color: white !important;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+.top-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+.top-btn:hover::before {
+    left: 100%;
+}
+.top-btn:hover {
+    transform: scale(1.1) translateY(-2px);
+    background: linear-gradient(to right, #4FC3F7, #2196F3);
+    box-shadow: 0 4px 15px rgba(79, 195, 247, 0.4);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 30px auto;
+    display: flex;
+    gap: 24px;
+}
+
+.left-col {
+    width: 220px;
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.left-col h3 {
+    font-size: 16px;
+    margin-bottom: 16px;
+    border-left: 4px solid #4FC3F7;
+    padding-left: 8px;
+}
+
+.category-list {
+    list-style: none;
+}
+
+.category-list li {
+    margin: 10px 0;
+}
+
+.category-list a {
+    color: #555;
+    text-decoration: none;
+}
+
+.category-list a:hover {
+    color: #4FC3F7;
+    font-weight: bold;
+}
+
+.middle-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.hot-recommend, .new-books, .search-panel {
+    /* 通用卡片样式：用于热门推荐、新书及新增的搜索面板 */
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.hot-recommend h3, .new-books h3, .search-panel h3 {
+    /* 区块标题样式：带左侧蓝色标识 */
+    font-size: 16px;
+    margin-bottom: 18px;
+    border-left: 4px solid #4FC3F7;
+    padding-left: 8px;
+}
+
+.search-controls {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.search-controls input,
+.search-controls select {
+    flex: 1;
+    min-width: 180px;
+    padding: 12px 14px;
+    border: 1px solid #dde6f1;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #333;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-controls input:focus,
+.search-controls select:focus {
+    outline: none;
+    border-color: #4FC3F7;
+    box-shadow: 0 0 0 3px rgba(79,195,247,0.12);
+}
+
+.search-results {
+    display: grid;
+    gap: 14px;
+}
+
+.search-card {
+    background: #f8fbff;
+    border: 1px solid #e3f0ff;
+    border-radius: 12px;
+    padding: 18px;
+}
+
+.search-card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1d3a6f;
+    margin-bottom: 8px;
+}
+
+.search-card-meta {
+    font-size: 13px;
+    color: #666;
+.search-card mark {
+    background: #ffef99;
+    padding: 0 3px;
+    border-radius: 3px;
+}
+
+/* 优化按钮样式：更明显的悬浮/焦点态 */
+.demo-controls button, .search-controls button, .top-btn, .close-cart, .login-box button {
+    transition: all .18s ease;
+}
+.demo-controls button:hover, .search-controls button:hover, .top-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.06);
+}
+.demo-controls input, .search-controls input, .search-controls select {
+    border: 1px solid #e6e6e6;
+    padding: 8px 10px;
+    border-radius: 6px;
+}
+    margin-bottom: 10px;
+}
+
+.search-card-desc {
+    font-size: 14px;
+    color: #444;
+    line-height: 1.6;
+}
+
+.hint {
+    color: #666;
+    font-size: 14px;
+}
+
+/* DOM 演示面板样式：美化示例列表与操作控件 */
+.dom-demo {
+    background: #fff;
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.dom-demo .demo-list {
+    list-style: decimal; padding-left: 20px; margin-bottom: 12px;
+}
+.dom-demo .demo-item { padding: 8px 10px; background: #f7fbff; border:1px solid #e6f0ff; border-radius:6px; margin-bottom:8px; }
+.dom-demo .demo-controls { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.dom-demo .demo-controls input { padding:8px 10px; border-radius:6px; border:1px solid #ddd; min-width:160px; }
+.dom-demo .demo-controls button { padding:8px 10px; border-radius:6px; border:none; background:#4FC3F7; color:#fff; cursor:pointer; }
+.dom-demo .demo-controls button:hover { background:#2196F3 }
+
+/* styleBox 用途：作为 innerHTML/innerText 的目标展示区域，初始样式 */
+.style-box {
+    margin-top:12px;
+    padding:10px;
+    background:#fff9f0;
+    border:1px dashed #ffd1a9;
+    border-radius:8px;
+    color:#333;
+}
+
+/* 密码强度提示样式：根据 data-status 调整颜色（弱/中/强） */
+.strength-hint {
+    margin: 6px 0 16px;
+    font-size: 13px;
+    color: #4A5568;
+}
+
+.strength-hint[data-status='weak'] {
+    color: #e53e3e;
+}
+
+.strength-hint[data-status='medium'] {
+    color: #d69e2e;
+}
+
+.strength-hint[data-status='strong'] {
+    color: #38a169;
+}
+
+.book-grid {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.book-carousel {
+    position: relative;
+    width: 500px;
+    height: 500px;
+    margin: 20px auto;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    animation: rotateCarousel 20s infinite linear;
+}
+
+@keyframes rotateCarousel {
+    from { transform: rotateY(0deg); }
+    to { transform: rotateY(360deg); }
+}
+
+.book-item {
+    position: absolute;
+    width: 150px;
+    height: 225px;
+    left: 50%;
+    top: 50%;
+    margin-left: -75px;
+    margin-top: -112.5px;
+    transform-origin: 0 0;
+    transform: rotateY(calc(var(--angle) * 1deg)) translateZ(200px);
+    transition: transform 0.3s ease;
+}
+
+.book-item:hover {
+    transform: rotateY(calc(var(--angle) * 1deg)) translateZ(220px) scale(1.1);
+}
+
+.book-card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+    cursor: pointer;
+}
+
+.book-item:hover .book-card {
+    transform: rotateY(180deg);
+}
+
+.book-front, .book-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.book-front {
+    background: #fff;
+}
+
+.book-back {
+    background: #f8f9fa;
+    transform: rotateY(180deg);
+    color: #333;
+}
+
+.book-front img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 4px;
+}
+
+.book-front p {
+    font-size: 12px;
+    color: #444;
+    margin: 2px 0;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.book-front span {
+    color: #F44336;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.book-back h4 {
+    font-size: 14px;
+    margin-bottom: 4px;
+    text-align: center;
+}
+
+.book-back .rating {
+    color: #FFD700;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.book-back .price {
+    color: #F44336;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.book-back .description {
+    font-size: 10px;
+    line-height: 1.3;
+    text-align: center;
+    color: #666;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th {
+    background: #f5f7fa;
+    padding: 12px;
+    font-weight: bold;
+}
+
+td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+/* 新书封面缩略图样式：用于在新书列表中显示小图 */
+.new-book-thumb {
+    width: 56px;
+    height: auto;
+    border-radius: 6px;
+    display: block;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* 图片模态（lightbox）样式 */
+.image-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 12000;
+    padding: 24px;
+}
+.image-modal-inner { position: relative; max-width: 90%; max-height: 90%; }
+.image-modal img { max-width: 100%; max-height: 80vh; border-radius: 8px; display: block; }
+.image-modal-close { position: absolute; top: -14px; right: -14px; background: #fff; border: none; border-radius: 50%; width:36px; height:36px; font-size:20px; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.2); }
+.image-modal-caption { margin-top:8px; color:#fff; text-align:center; font-size:14px; }
+
+.right-col {
+    width: 260px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.promo-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+.promo-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.promo-card p {
+    font-size: 14px;
+    color: #e67e22;
+    font-weight: bold;
+}
+
+.login-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 12px;
+    padding: 32px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    display: none;
+    z-index: 999;
+}
+
+.login-box h4 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.login-box input {
+    width: 100%;
+    padding: 10px 12px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+    font-size: 14px;
+}
+
+.login-box input:focus {
+    border-color: #4FC3F7;
+    box-shadow: 0 0 8px rgba(79, 195, 247, 0.3);
+    transform: scale(1.02);
+    outline: none;
+}
+
+.strength-hint {
+    margin: 6px 0 16px;
+    font-size: 13px;
+    color: #4A5568;
+}
+
+.strength-hint[data-status='weak'] {
+    color: #e53e3e;
+}
+
+.strength-hint[data-status='medium'] {
+    color: #d69e2e;
+}
+
+.strength-hint[data-status='strong'] {
+    color: #38a169;
+}
+
+.login-box button {
+    width: 48%;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background: #2D3744;
+    color: white;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-box button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.login-box button:hover::before {
+    left: 100%;
+}
+
+.login-box button:hover {
+    background: #4FC3F7;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(79, 195, 247, 0.4);
+}
+
+.carousel {
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+    margin: 0 auto 20px;
+    border-radius: 12px;
+}
+.carousel-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    animation: slideUp 12s infinite;
+}
+.carousel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.carousel-inner img:nth-child(1) { position: absolute; top: 0; }
+.carousel-inner img:nth-child(2) { position: absolute; top: 100%; }
+.carousel-inner img:nth-child(3) { position: absolute; top: 200%; }
+
+@keyframes slideUp {
+    0%   { transform: translateY(0); }
+    33%  { transform: translateY(-100%); }
+    66%  { transform: translateY(-200%); }
+    100% { transform: translateY(0); }
+}
+
+.cart-box {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 420px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    z-index: 9999;
+    display: none;
+}
+.cart-box h3 {
+    margin-bottom: 15px;
+    color: #2D3744;
+}
+.cart-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+.close-cart {
+    margin-top: 15px;
+    padding: 8px 16px;
+    background: #2D3744;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.icon {
+    display: inline-block;
+    transition: transform 0.4s ease;
+}
+.icon:hover {
+    transform: rotate(360deg);
+}
+
+.footer {
+    background: #2D3744;
+    color: white;
+    padding: 40px 0 20px;
+    margin-top: 50px;
+    text-align: center;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.social-icons {
+    margin-bottom: 20px;
+}
+
+.social-icon {
+    display: inline-block;
+    font-size: 24px;
+    margin: 0 15px;
+    color: #4FC3F7;
+    text-decoration: none;
+    transition: transform 0.5s ease, color 0.3s ease;
+    position: relative;
+    transform-style: preserve-3d;
+}
+
+.social-icon:hover {
+    transform: rotateY(360deg) scale(1.2);
+    color: #2196F3;
+}
+
+.social-icon::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    white-space: nowrap;
+}
+
+.social-icon:hover::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+.copyright p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0;
+    animation: fadeIn 2s ease-in 0.5s forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
