@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数字图书展销平台</title>
+    <!-- 路径要和你文件夹结构对应 -->
+    <link rel="stylesheet" href="css/lab7-02-006-index.css">
+</head>
+<body>
+    <div id="time-bar" aria-live="polite" role="status">正在加载时间…</div>
+    <div class="header">
+        <div class="logo">数字图书展销平台</div>
+        <div class="nav">
+            <a href="#">首页</a>
+            <a href="#">产品展示</a>
+            <a href="#">图书分类</a>
+            <a href="#">新品上市</a>
+            <a href="#">关于我们</a>
+            <a href="#">联系我们</a>
+            <a href="#" class="icon" style="font-size:18px; margin-left:22px;">🔍</a>
+            <a href="#" class="icon" style="font-size:18px; margin-left:12px;" onclick="openCart(); return false;">🛒</a>
+            <a class="top-btn" href="javascript:openLogin()">登录</a>
+            <a class="top-btn" href="javascript:openReg()">注册</a>
+            <span class="user-status" id="userStatus"></span> <!-- 当前用户登录状态显示 -->
+        </div>
+    </div>
+
+    <div class="carousel">
+        <div class="carousel-inner">
+            <img src="images/book1.jpg">
+            <img src="images/book2.jpg">
+            <img src="images/book3.jpg">
+        </div>
+    </div>
+
+    <div class="cart-box" id="cartBox">
+        <h3>我的购物车</h3>
+        <div id="cartList">购物车为空</div>
+        <div class="dom-demo cart-manager">
+            <h4>购物车内容编辑</h4>
+            <p class="hint" style="margin-bottom:12px;">可在此区域直接更新推荐书单、公告文本和展示样式，增强购物车页面交互体验。</p>
+            <ul id="demoList" class="demo-list">
+                <li class="demo-item">推荐图书：百年孤独</li>
+                <li class="demo-item">推荐图书：围城</li>
+            </ul>
+            <div class="demo-controls">
+                <input id="newItemText" placeholder="新增推荐书名">
+                <button type="button" onclick="domCreateNode()">追加推荐</button>
+                <button type="button" onclick="domInsertNode()">插入首条</button>
+                <button type="button" onclick="domReplaceNode()">替换第2条</button>
+                <button type="button" onclick="domDeleteNode()">移除末条</button>
+                <button type="button" onclick="domCloneNode()">复制首条</button>
+            </div>
+            <div class="demo-controls" style="margin-top:12px;">
+                <input id="htmlContent" placeholder="HTML 内容，例如 <b>热卖</b>">
+                <button type="button" onclick="domSetInnerHTML()">设置为富文本</button>
+                <input id="textContent" placeholder="纯文本公告">
+                <button type="button" onclick="domSetInnerText()">设置纯文本</button>
+                <input id="bgColor" type="color" value="#f7fbff">
+                <input id="fontSize" type="number" min="12" max="36" value="14" style="width:72px;">
+                <button type="button" onclick="domChangeStyle()">调整展示样式</button>
+            </div>
+            <div id="styleBox" class="style-box">公告区域：此处内容与样式可通过页面控件直接更新。</div>
+        </div>
+        <button class="close-cart" onclick="closeCart()">关闭</button>
+    </div>
+
+    <div class="container">
+        <div class="left-col">
+            <h3>图书分类</h3>
+            <ul class="category-list">
+                <li><a href="#">教育</a></li>
+                <li><a href="#">儿童</a></li>
+                <li><a href="#">史实</a></li>
+                <li><a href="#">科幻</a></li>
+            </ul>
+        </div>
+
+        <div class="middle-col">
+            <div class="search-panel">
+                <h3>智能图书搜索</h3>
+                <div class="search-controls">
+                    <input type="text" id="bookSearch" placeholder="请输入书名 / 作者 / 分类关键词" oninput="debouncedFilter()">
+                    <select id="searchType" onchange="filterBooks()">
+                        <option value="all">全部匹配</option>
+                        <option value="name">按书名</option>
+                        <option value="author">按作者</option>
+                        <option value="category">按分类</option>
+                    </select>
+                </div>
+                <div id="searchResults" class="search-results">
+                    <p class="hint">请输入关键词，即时搜索匹配图书。</p>
+                </div>
+            </div>
+
+            <div class="hot-recommend">
+                <h3>热门推荐</h3>
+                <div class="book-carousel">
+                    <div class="book-item" onclick="addToCart('百年孤独',48)" style="--angle: 0;">
+                        <div class="book-card">
+                            <div class="book-front">
+                                <img src="images/book1.jpg" alt="百年孤独">
+                                <p>百年孤独</p>
+                                <span>¥48</span>
+                            </div>
+                            <div class="book-back">
+                                <h4>百年孤独</h4>
+                                <div class="rating">★★★★☆ 4.5/5</div>
+                                <p class="price">¥48</p>
+                                <p class="description">马尔克斯的魔幻现实主义代表作，讲述了布恩迪亚家族七代人的传奇故事。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="book-item" onclick="addToCart('我与地坛',45)" style="--angle: 90;">
+                        <div class="book-card">
+                            <div class="book-front">
+                                <img src="images/book2.jpg" alt="我与地坛">
+                                <p>我与地坛</p>
+                                <span>¥45</span>
+                            </div>
+                            <div class="book-back">
+                                <h4>我与地坛</h4>
+                                <div class="rating">★★★★★ 5.0/5</div>
+                                <p class="price">¥45</p>
+                                <p class="description">史铁生的散文集，探讨生命、残疾与哲学的深刻思考。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="book-item" onclick="addToCart('围城',37)" style="--angle: 180;">
+                        <div class="book-card">
+                            <div class="book-front">
+                                <img src="images/book3.jpg" alt="围城">
+                                <p>围城</p>
+                                <span>¥37</span>
+                            </div>
+                            <div class="book-back">
+                                <h4>围城</h4>
+                                <div class="rating">★★★★☆ 4.2/5</div>
+                                <p class="price">¥37</p>
+                                <p class="description">钱钟书的经典小说，讽刺婚姻与知识分子的生活。</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="book-item" onclick="addToCart('你当像鸟飞往你的山',36)" style="--angle: 270;">
+                        <div class="book-card">
+                            <div class="book-front">
+                                <img src="images/book4.jpg" alt="你当像鸟飞往你的山">
+                                <p>你当像鸟飞往你的山</p>
+                                <span>¥36</span>
+                            </div>
+                            <div class="book-back">
+                                <h4>你当像鸟飞往你的山</h4>
+                                <div class="rating">★★★★★ 4.8/5</div>
+                                <p class="price">¥36</p>
+                                <p class="description">塔拉·韦斯特弗的自传，讲述从贫困中走出，实现梦想的故事。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="new-books">
+                <h3>新书上市</h3>
+                <table>
+                    <tr>
+                        <th>封面</th>
+                        <th>书名</th>
+                        <th>作者</th>
+                        <th>价格</th>
+                    </tr>
+                    <tr>
+                        <td><img src="images/book5.jpg" alt="Linux应用与实训教程" class="new-book-thumb" onclick="openImageModal('images/book5.jpg','Linux应用与实训教程')"></td>
+                        <td>Linux应用与实训教程</td>
+                        <td>刘飞</td>
+                        <td>¥36.66</td>
+                    </tr>
+                    <tr>
+                        <td><img src="images/book6.jpg" alt="C程序设计" class="new-book-thumb" onclick="openImageModal('images/book6.jpg','C程序设计')"></td>
+                        <td>C程序设计</td>
+                        <td>谭浩强</td>
+                        <td>¥66.66</td>
+                    </tr>
+                    <tr>
+                        <td><img src="images/book7.jpg" alt="大学军事教程" class="new-book-thumb" onclick="openImageModal('images/book7.jpg','大学军事教程')"></td>
+                        <td>大学军事教程</td>
+                        <td>王春生</td>
+                        <td>¥88.88</td>
+                    </tr>
+                    <tr>
+                        <td><img src="images/book8.jpg" alt="程序设计基础" class="new-book-thumb" onclick="openImageModal('images/book8.jpg','程序设计基础')"></td>
+                        <td>程序设计基础</td>
+                        <td>张小峰</td>
+                        <td>¥99.99</td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+
+        <div class="right-col">
+            <div class="promo-card">
+                <img src="images/promo1.png" alt="满减活动">
+                <p>全场图书满66.66减20！</p>
+            </div>
+            <div class="promo-card">
+                <img src="images/promo2.png" alt="第二件半价">
+                <p>购买C程序设计享第二件半价！</p>
+            </div>
+            <div class="promo-card">
+                <img src="images/promo3.png" alt="会员优惠">
+                <p>会员专享额外9折优惠！</p>
+            </div>
+            <div class="promo-card limited-sale" aria-hidden="false">
+                <div class="ribbon">限时</div>
+                <h3>限时抢购</h3>
+                <p class="countdown-label">距离活动结束：</p>
+                <div id="countdownTimer" class="countdown-value" role="timer" aria-live="polite">加载中...</div>
+                <p class="countdown-note">每位用户限购，手慢无！</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="login-box" id="loginModal">
+        <h4>用户登录</h4>
+        <input type="text" id="loginUser" placeholder="用户名">
+        <input type="password" id="loginPwd" placeholder="密码">
+        <button onclick="loginCheck()">登录</button>
+        <button onclick="closeBox()">关闭</button>
+    </div>
+
+    <div class="login-box" id="regModal">
+        <h4>用户注册</h4>
+        <input type="text" id="regUser" placeholder="请输入邮箱或手机号">
+        <input type="password" id="regPwd" placeholder="设置密码" oninput="updatePasswordStrength()">
+        <div id="passwordStrengthHint" class="strength-hint">密码强度：请输入密码</div>
+        <button onclick="registerSave()">注册</button>
+        <button onclick="closeBox()">关闭</button>
+    </div>
+
+<script>
+function openLogin(){document.getElementById("loginModal").style.display="block";document.getElementById("regModal").style.display="none";}
+function openReg(){document.getElementById("regModal").style.display="block";document.getElementById("loginModal").style.display="none";}
+function closeBox(){document.getElementById("loginModal").style.display="none";document.getElementById("regModal").style.display="none";}
+function User(username){
+    this.username = username||''; // 用户名（注册/登录时设置）
+    this.isLoggedIn = false;      // 登录状态标识
+    this.cart = [];               // 购物车数组，保存 {name, price}
+}
+
+// 登录：设置用户名并清空旧购物车（示例逻辑），随后刷新 UI 顶部状态
+User.prototype.login = function(username){
+    this.username = username;
+    this.isLoggedIn = true;
+    this.cart = [];
+    updateUserStatus();
+};
+
+// 注销：清理用户信息与购物车，并刷新 UI
+User.prototype.logout = function(){
+    this.username = '';
+    this.isLoggedIn = false;
+    this.cart = [];
+    updateUserStatus();
+};
+
+// 添加到购物车：检查登录，添加项并渲染购物车
+User.prototype.addToCart = function(name,price){
+    if(!this.isLoggedIn){
+        alert('请先登录后再添加购物车');
+        return false;
+    }
+    this.cart.push({name,price});
+    renderCart();
+    return true;
+};
+
+// 计算购物车总价（数字化价格后求和）
+User.prototype.getCartTotal = function(){
+    return this.cart.reduce((sum, item)=>sum + Number(item.price), 0);
+};
+
+const currentUser = new User(); // 当前会话的用户对象
+
+// 更新页面顶部的登录状态显示（用于显示欢迎语和退出链接）
+function updateUserStatus(){
+    const statusEl = document.getElementById('userStatus');
+    if(!statusEl) return;
+    if(currentUser.isLoggedIn){
+        statusEl.innerHTML = `欢迎，${currentUser.username} | <a href='javascript:currentUser.logout();closeBox();' style='color:#4FC3F7;text-decoration:none;'>退出</a>`;
+    } else {
+        statusEl.innerHTML = '';
+    }
+}
+
+// 校验用户名：支持邮箱或国内手机号（用于注册校验）
+function isValidUsername(value){
+    const emailRe=/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    const phoneRe=/^1[3-9]\d{9}$/;
+    return emailRe.test(value)||phoneRe.test(value);
+}
+function getPasswordStrength(value){if(!value) return {level:'请输入密码', status:'empty'};const hasLetters=/[A-Za-z]/.test(value);const hasDigits=/\d/.test(value);const hasSpecial=/[^A-Za-z0-9]/.test(value);if(value.length>=8&&hasLetters&&hasDigits&&hasSpecial) return {level:'强', status:'strong'}; if(value.length>=6&&(hasLetters&&hasDigits||hasLetters&&hasSpecial||hasDigits&&hasSpecial)) return {level:'中', status:'medium'}; return {level:'弱', status:'weak'};}
+function updatePasswordStrength(){const pwd=document.getElementById('regPwd').value;const result=getPasswordStrength(pwd);const hint=document.getElementById('passwordStrengthHint');hint.textContent=`密码强度：${result.level}`;hint.dataset.status=result.status;}
+function registerSave(){
+    let u=document.getElementById("regUser").value.trim();
+    let p=document.getElementById("regPwd").value.trim();
+    if(!u||!p){
+        alert("请填写完整信息");
+        return;
+    }
+    if(!isValidUsername(u)){
+        alert("用户名格式不正确，请输入邮箱或手机号");
+        return;
+    }
+    const strength=getPasswordStrength(p);
+    if(strength.status==='empty'||strength.status==='weak'){
+        alert("密码强度过低，请使用更复杂的密码（建议包含字母、数字和特殊字符）");
+        return;
+    }
+    // 注册成功后保存用户数据并登录当前用户
+    localStorage.setItem("userData",JSON.stringify({name:u,pwd:p}));
+    currentUser.login(u);
+    alert("注册成功！");
+    closeBox();
+}
+
+// registerSave 用途：处理用户注册——
+// 1. 校验用户名格式和密码强度，2. 将凭据保存到 localStorage（示例），3. 自动将用户标记为已登录
+
+function loginCheck(){
+    let u=document.getElementById("loginUser").value.trim();
+    let p=document.getElementById("loginPwd").value.trim();
+    let local=localStorage.getItem("userData");
+    if(!local){
+        alert("请先注册");
+        return;
+    }
+    let user=JSON.parse(local);
+    if(u==user.name&&p==user.pwd){
+        currentUser.login(u); // 登录成功并更新用户对象状态
+        alert("登录成功！");
+        closeBox();
+    }else{
+        alert("账号或密码错误");
+    }
+}
+
+// loginCheck 用途：验证登录凭据（从 localStorage 读取示例数据），验证成功后设置 currentUser 登录状态
+
+function openCart(){
+    if(!currentUser.isLoggedIn){
+        alert('请先登录后查看购物车');
+        return;
+    }
+    const cartBox = document.getElementById('cartBox');
+    cartBox.classList.add('open');
+    renderCart();
+}
+function closeCart(){
+    const cartBox = document.getElementById('cartBox');
+    cartBox.classList.remove('open');
+}
+function addToCart(name,price){currentUser.addToCart(name,price);} // 将加入购物车操作委托给用户对象
+
+function renderCart(){
+    let list=document.getElementById("cartList");
+    if(currentUser.cart.length===0){
+        list.innerHTML="购物车为空";
+        return;
+    }
+    let html="";
+    let total=0;
+    currentUser.cart.forEach(item=>{
+        html+=`<div class='cart-item'>${item.name} - ¥${item.price}</div>`;
+        total+=item.price;
+    });
+    html+=`<div style='margin-top:10px;font-weight:bold;'>总计：¥${currentUser.getCartTotal()}</div>`;
+    list.innerHTML=html;
+}
+
+// ================= DOM 操作示例函数（示范至少 4 种获取元素方法） =================
+
+// 1) document.getElementById - 获取 id 为 demoList 的元素，创建并追加新 li
+function domCreateNode(){
+    const text = document.getElementById('newItemText').value || '新节点';
+    const li = document.createElement('li');
+    li.className = 'demo-item';
+    li.textContent = text;
+    const ul = document.getElementById('demoList'); // getElementById
+    ul.appendChild(li); // appendChild 动态添加节点
+}
+// 用处：演示 createElement + getElementById + appendChild，动态创建并添加节点到列表。
+
+// 2) document.querySelector - 在列表首项前插入节点
+function domInsertNode(){
+    const ul = document.querySelector('.demo-list'); // querySelector
+    const li = document.createElement('li');
+    li.className = 'demo-item';
+    li.textContent = '插入节点';
+    const first = ul.firstElementChild;
+    ul.insertBefore(li, first); // insertBefore 在指定位置插入
+}
+// 用处：演示 querySelector + insertBefore，用于在特定位置插入节点。
+
+// 3) document.getElementsByClassName - 替换第二项（HTMLCollection）
+function domReplaceNode(){
+    const items = document.getElementsByClassName('demo-item'); // HTMLCollection
+    if(items.length < 2){ alert('当前列表少于2项，无法替换'); return; }
+    const second = items[1];
+    const newLi = document.createElement('li');
+    newLi.className = 'demo-item';
+    newLi.textContent = '替换后的新节点';
+    second.parentNode.replaceChild(newLi, second); // replaceChild 替换节点
+}
+// 用处：演示 getElementsByClassName + replaceChild，说明如何替换已有节点。
+
+// 4) document.querySelectorAll - 删除最后一项（NodeList）
+function domDeleteNode(){
+    const nodes = document.querySelectorAll('#demoList li'); // querySelectorAll 返回 NodeList
+    if(nodes.length === 0){ alert('列表为空'); return; }
+    const last = nodes[nodes.length - 1];
+    last.parentNode.removeChild(last); // removeChild 删除节点
+}
+// 用处：演示 querySelectorAll + removeChild，动态删除节点。
+
+// 5) 其他操作：克隆节点（cloneNode）示例
+function domCloneNode(){
+    const first = document.getElementById('demoList').querySelector('li'); // 组合使用 getElementById + querySelector
+    if(!first){ alert('列表为空，无法克隆'); return; }
+    const clone = first.cloneNode(true); // cloneNode(deep=true) 深拷贝节点
+    document.getElementById('demoList').appendChild(clone);
+}
+// 用处：演示 cloneNode，用于复制已有节点并再次插入。
+
+// ============================================================================
+
+// ========== innerHTML / innerText / style 操作示例 ==========
+
+function domSetInnerHTML(){
+    const html = document.getElementById('htmlContent').value || '<em>示例 HTML</em>';
+    const box = document.getElementById('styleBox');
+    box.innerHTML = html; // 用 innerHTML 写入可解析为 HTML 的字符串
+}
+// 用处：演示使用 `innerHTML` 将字符串作为 HTML 解析并插入到元素中（可插入标签、结构）。
+
+function domSetInnerText(){
+    const text = document.getElementById('textContent').value || '示例纯文本';
+    const box = document.getElementById('styleBox');
+    box.innerText = text; // 用 innerText 写入纯文本，自动转义 HTML 标签
+}
+// 用处：演示使用 `innerText` 将字符串作为纯文本写入（不会解析 HTML）。
+
+function domChangeStyle(){
+    const box = document.getElementById('styleBox');
+    const color = document.getElementById('bgColor').value || '#ffffff';
+    const size = document.getElementById('fontSize').value || '14';
+    box.style.backgroundColor = color; // 通过 style 属性动态修改背景色
+    box.style.padding = '10px';
+    box.style.borderRadius = '8px';
+    box.style.fontSize = size + 'px'; // 通过 style 修改字体大小
+    // 用处：演示直接通过元素的 `style` 对象动态修改 CSS 属性
+}
+
+// renderCart 用途：将 currentUser.cart 渲染到购物车弹窗中，显示每项和总价
+
+function Book(name, author, category, price, rating, desc){
+    this.name = name;
+    this.author = author;
+    this.category = category;
+    this.price = price;
+    this.rating = rating;
+    this.desc = desc;
+}
+Book.prototype.getSummary = function(){
+    return `${this.name} — ${this.author} (${this.category}) 评分：${this.rating}`;
+};
+
+const sampleBook = {
+    name: '活着',
+    author: '余华',
+    category: '史实',
+    price: '39.90',
+    rating: '4.8',
+    desc: '余华经典长篇，讲述普通人在时代洪流中的挣扎与坚韧。'
+};
+
+const constructedBook = new Book(
+    '三体',
+    '刘慈欣',
+    '科幻',
+    '59.90',
+    '4.7',
+    '刘慈欣科幻巨著，描绘人类与外星文明的冲突与思考。'
+);
+
+// 样例说明：
+// - sampleBook：使用对象字面量创建的图书对象（演示字面量方式）
+// - constructedBook：使用构造函数 `new Book(...)` 创建（演示构造函数方式）
+
+const bookDatabase = [
+    {name:'百年孤独', author:'加西亚·马尔克斯', category:'史实', price:'48', rating:'4.9', desc:'魔幻现实主义代表作，讲述布恩迪亚家族七代人的传奇故事。'},
+    {name:'我与地坛', author:'史铁生', category:'教育', price:'45', rating:'4.8', desc:'探讨生命、残疾与哲学的深刻散文集。'},
+    {name:'围城', author:'钱钟书', category:'史实', price:'37', rating:'4.6', desc:'讽刺婚姻与知识分子的经典小说。'},
+    {name:'你当像鸟飞往你的山', author:'塔拉·韦斯特弗', category:'励志', price:'36', rating:'4.8', desc:'从贫困中走出，实现学术与人生蜕变的真实故事。'},
+    {name:'Linux应用与实训教程', author:'刘飞', category:'教育', price:'36.66', rating:'4.3', desc:'面向学习者的Linux实战教程，适合高校实验教学。'},
+    {name:'C程序设计', author:'谭浩强', category:'教育', price:'66.66', rating:'4.4', desc:'经典C语言入门教材，系统讲解程序设计基础。'},
+    {name:'大学军事教程', author:'王春生', category:'教育', price:'88.88', rating:'4.1', desc:'高校军事理论与实践课程参考教材。'},
+    {name:'程序设计基础', author:'张小峰', category:'教育', price:'99.99', rating:'4.2', desc:'面向新手的程序设计综合训练教材。'}
+];
+bookDatabase.push(sampleBook, constructedBook);
+
+function filterBooks(){
+    const keyword = document.getElementById('bookSearch').value.trim().toLowerCase();
+    const type = document.getElementById('searchType').value;
+    const results = bookDatabase.filter(book => {
+        if (!keyword) return true;
+        const name = book.name.toLowerCase();
+        const author = book.author.toLowerCase();
+        const category = book.category.toLowerCase();
+        if (type === 'name') return name.includes(keyword);
+        if (type === 'author') return author.includes(keyword);
+        if (type === 'category') return category.includes(keyword);
+        return name.includes(keyword) || author.includes(keyword) || category.includes(keyword);
+    });
+    renderSearchResults(results, keyword);
+}
+
+// filterBooks 用途：根据输入关键字和筛选类型（书名/作者/分类）即时过滤 `bookDatabase`，用于搜索联想
+
+function renderSearchResults(results, keyword){
+    const container = document.getElementById('searchResults');
+    if (!keyword){
+        container.innerHTML = '<p class="hint">请输入关键词，即时搜索匹配图书。</p>';
+        return;
+    }
+    if (!results.length){
+        container.innerHTML = '<p class="hint">未找到匹配的图书，请尝试其他关键词。</p>';
+        return;
+    }
+    // 高亮并安全渲染：对书名/作者/分类/描述先转义再用 <mark> 高亮关键词
+    container.innerHTML = results.map(book => {
+        const title = highlight(book.name, keyword);
+        const author = highlight(book.author, keyword);
+        const category = highlight(book.category, keyword);
+        const desc = highlight(book.desc, keyword);
+        return `
+        <div class="search-card">
+            <div class="search-card-title">${title}</div>
+            <div class="search-card-meta">作者：${author} | 分类：${category} | 价格：¥${escapeHtml(book.price)} | 评分：${escapeHtml(book.rating)}</div>
+            <div class="search-card-desc">${desc}</div>
+        </div>
+        `;
+    }).join('');
+}
+
+// renderSearchResults 用途：将 filterBooks 得到的匹配结果渲染为页面上的卡片列表
+
+// 辅助：防止频繁触发搜索的防抖函数
+function debounce(fn, wait){
+    let t=null;
+    return function(...args){
+        clearTimeout(t);
+        t = setTimeout(()=>fn.apply(this,args), wait);
+    }
+}
+
+// 安全转义 HTML，防止将未信任内容直接插入到 innerHTML 中
+function escapeHtml(str){
+    if(!str) return '';
+    return String(str).replace(/[&<>"']/g, function(s){
+        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[s];
+    });
+}
+
+// 高亮关键词（已对文本做转义），返回可安全使用于 innerHTML 的字符串
+function highlight(text, keyword){
+    if(!keyword) return escapeHtml(text);
+    const escKeyword = escapeHtml(keyword).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    const re = new RegExp('('+escKeyword+')','ig');
+    return escapeHtml(text).replace(re, '<mark>$1</mark>');
+}
+
+// 使用防抖包装 filterBooks，避免输入时频繁计算
+const debouncedFilter = debounce(filterBooks, 250);
+
+// 3D环形旋转控制
+const carousel = document.querySelector('.book-carousel');
+let isMouseOver = false;
+let animationPaused = false;
+
+carousel.addEventListener('mouseenter', () => {
+    isMouseOver = true;
+    carousel.style.animationPlayState = 'paused';
+});
+
+carousel.addEventListener('mouseleave', () => {
+    isMouseOver = false;
+    carousel.style.animationPlayState = 'running';
+});
+
+carousel.addEventListener('mousemove', (e) => {
+    if (!isMouseOver) return;
+    
+    const rect = carousel.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    
+    const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX) * (180 / Math.PI) + 90;
+    
+    carousel.style.transform = `rotateY(${angle}deg)`;
+});
+
+// 打开图片模态（lightbox）
+function openImageModal(src, alt){
+    const modal = document.getElementById('imageModal');
+    const img = document.getElementById('imageModalImg');
+    const cap = document.getElementById('imageModalCaption');
+    img.src = src;
+    img.alt = alt || '';
+    cap.textContent = alt || '';
+    modal.style.display = 'flex';
+    // 点击模态空白区域关闭
+    modal.onclick = function(e){ if(e.target === modal) closeImageModal(); };
+}
+
+function closeImageModal(){
+    const modal = document.getElementById('imageModal');
+    const img = document.getElementById('imageModalImg');
+    modal.style.display = 'none';
+    img.src = '';
+}
+</script>
+
+<script>
+// 顶部实时时间栏：使用 Date 对象并每秒更新
+(function(){
+    const el = document.getElementById('time-bar');
+    if(!el) return;
+    const weekdays = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+    function pad(n){ return String(n).padStart(2,'0'); }
+    function updateTime(){
+        const d = new Date();
+        const y = d.getFullYear();
+        const m = pad(d.getMonth() + 1);
+        const day = pad(d.getDate());
+        const w = weekdays[d.getDay()];
+        const hh = pad(d.getHours());
+        const mm = pad(d.getMinutes());
+        const ss = pad(d.getSeconds());
+        el.textContent = `${y}年${m}月${day}日 ${w} ${hh}:${mm}:${ss}`;
+    }
+    updateTime();
+    setInterval(updateTime, 1000);
+})();
+</script>
+
+<script>
+// 一周限时抢购倒计时（从首次加载算起 7 天）
+(function(){
+    const label = document.getElementById('countdownTimer');
+    if(!label) return;
+    const pad = n => String(n).padStart(2,'0');
+    const endTime = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    let timerId = null;
+    function update(){
+        const diff = endTime - new Date();
+        if(diff <= 0){
+            label.innerHTML = `<span class="seg">0</span><small>天</small><span class="seg">00</span><small>时</small><span class="seg">00</span><small>分</small><span class="seg">00</span><small>秒</small>`;
+            if(timerId) clearInterval(timerId);
+            label.classList.add('ended');
+            return;
+        }
+        const total = Math.floor(diff / 1000);
+        const days = Math.floor(total / 86400);
+        const hours = Math.floor((total % 86400) / 3600);
+        const minutes = Math.floor((total % 3600) / 60);
+        const seconds = total % 60;
+        label.innerHTML = `<span class="seg days">${days}</span><small>天</small><span class="seg">${pad(hours)}</span><small>时</small><span class="seg">${pad(minutes)}</span><small>分</small><span class="seg">${pad(seconds)}</span><small>秒</small>`;
+        // 轻微跳动提示
+        label.classList.remove('tick');
+        void label.offsetWidth;
+        label.classList.add('tick');
+    }
+    update();
+    timerId = setInterval(update, 1000);
+})();
+</script>
+
+<!-- 图片模态（lightbox） -->
+<div id="imageModal" class="image-modal" style="display:none;">
+    <div class="image-modal-inner">
+        <button class="image-modal-close" onclick="closeImageModal()" aria-label="关闭">×</button>
+        <img id="imageModalImg" src="" alt="" />
+        <div id="imageModalCaption" class="image-modal-caption"></div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="footer-content">
+        <div class="social-icons">
+            <a href="#" class="social-icon" data-tooltip="Facebook">📘</a>
+            <a href="#" class="social-icon" data-tooltip="Twitter">🐦</a>
+            <a href="#" class="social-icon" data-tooltip="Instagram">📷</a>
+            <a href="#" class="social-icon" data-tooltip="YouTube">📺</a>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2026 数字图书展销平台. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
